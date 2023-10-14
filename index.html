@@ -7,10 +7,30 @@
         <div id="app">
             <!-- <h1>{{deckName}}</h1> //cause flickers -->
             <h1 v-text="deckName"></h1>
-            <div class="card">
-                <h2 v-text="flipped ? '' : cards[0].front"></h2>
-                <div v-html="flipped ? cards[0].back : '' "></div>
+
+            <!-- <div class="user-input"> -->
+                <!-- Type something:<input type="text" :value="userInput"> // 1 way -->
+                <!-- Type Something: <input type="text" v-model="userInput"> // 2 way -->
+            <!-- </div>/ -->
+            <!-- <div class="card">
+                <h2 v-text=" userInput == 'flip' ? '': cards[0].front "></h2>
+                <div v-html=" userInput == 'flip' ? cards[0].back : '' "></div>"
+            </div> -->
+            <!-- <a v-bind:href="readMoreUrl">Read More</a> -->
+
+            <!-- <div v-on:click="flipped = !flipped" class="card"> -->
+            <div @click="flipped = !flipped" class="card">
+                <h2 v-text="flipped ? '' : cards[index].front"></h2>
+                <div v-html="flipped ? cards[index].back : '' "></div>
             </div>
+            <div class="navigation">
+                <button @click="move(-1)" type="button">&#8592</button>
+                <button @click="move(+1)" type="button">&#8594</button>
+                <button @click="moveOld" type="button">Old &#8594</button>
+            </div>
+
+            <a :href="readMoreUrl"></a>
+
         </div>
         <script src="./data.js"></script>
         <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
@@ -21,7 +41,22 @@
                         deckName:"Vue.js Fundamentals",
                         // cards:cards
                         cards,
-                        flipped: false
+                        index:0,
+                        flipped: false, // app.flipped = true
+                        readMoreUrl: 'https://v3.vuejs.org/guide',
+                        // userInput:'default' // app.userInput = something else
+                    }
+                },
+                methods: {
+                    moveOld(){
+                        this.index ++;
+                        this.flipped = false;
+                    },
+                    move(change){
+                        if(this.cards[this.index + change]){
+                            this.index += change;
+                            this.flipped = false;
+                        }
                     }
                 }
             }
